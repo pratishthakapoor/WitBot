@@ -31,5 +31,4 @@ namespace ServiceChatApp_APIAI_.Dialogs
             return heroCard.ToAttachment();
         }
     }
-    }
 }
