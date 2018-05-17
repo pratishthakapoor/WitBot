@@ -159,6 +159,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="APIAILogger\API_AI_Logger.cs" />
+    <Compile Include="Dialogs\HeroCardDetails.cs" />
     <Compile Include="Dialogs\Logger.cs" />
     <Compile Include="KeyPhraseExtraction\Document.cs" />
     <Compile Include="KeyPhraseExtraction\Exception\DocumentCollectionMaxDocumentException.cs" />

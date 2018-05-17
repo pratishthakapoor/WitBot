@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Connector;
 
 namespace ServiceChatApp_APIAI_.Dialogs
 {
@@ -193,7 +194,11 @@ namespace ServiceChatApp_APIAI_.Dialogs
             if(incidentStatusDetail == "1")
             {
                 var status = "Your ticket is created and is under review of your team.";
-                string Noteresult = 
+                string Noteresult = Logger.RetrieveIncidentWorkNotes(incidentTokenNumber);
+
+                var replyMessage = context.MakeMessage();
+
+                Attachment attachment = HeroCardDetails.GetReplyMessage(Noteresult, incidentTokenNumber, status);
             }
         }
     }
