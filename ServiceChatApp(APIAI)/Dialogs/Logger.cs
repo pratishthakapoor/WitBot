@@ -142,6 +142,78 @@ namespace ServiceChatApp_APIAI_.Dialogs
             return string.Empty;
         }
 
+        internal static string RetrieveIncidentCloseDetails(string Newresponse)
+        {
+            try
+            {
+                string username = Constants.ServiceNowUserName;
+                string password = Constants.ServiceNowPassword;
+                string URL = Constants.ServiceNowUrl + "?" + "sysparm_query=number=" + Newresponse;
+
+                var auth = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes(username + ":" + password));
+
+                HttpWebRequest RetrieveRequest = WebRequest.Create(URL) as HttpWebRequest;
+                RetrieveRequest.Headers.Add("Authorization", auth);
+                RetrieveRequest.Method = "GET";
+
+                using (HttpWebResponse SnowResponse = RetrieveRequest.GetResponse() as HttpWebResponse)
+                {
+                    var result = new StreamReader(SnowResponse.GetResponseStream()).ReadToEnd();
+
+                    JObject jResponse = JObject.Parse(result.ToString());
+                    JToken obObject = jResponse["result"];
+                    JEnumerable<JToken> ClosedDeatils = (JEnumerable<JToken>)obObject.Values("close_code");
+                    foreach (var ClosedItem in ClosedDeatils)
+                    {
+                        if (ClosedItem != null)
+                            return ((JValue)ClosedItem).Value.ToString();
+                    }
+                }
+            }
+            catch (Exception message)
+            {
+                Console.WriteLine(message.Message);
+                return message.Message;
+            }
+            return string.Empty;
+        }
+
+        internal static string RetrieveIncidentResolveDetails(string Detailresponse)
+        {
+            try
+            {
+                string username = Constants.ServiceNowUserName;
+                string password = Constants.ServiceNowPassword;
+                string URL = Constants.ServiceNowUrl + "?" + "sysparm_query=number=" + Detailresponse;
+
+                var auth = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes(username + ":" + password));
+
+                HttpWebRequest RetrieveRequest = WebRequest.Create(URL) as HttpWebRequest;
+                RetrieveRequest.Headers.Add("Authorization", auth);
+                RetrieveRequest.Method = "GET";
+
+                using (HttpWebResponse SnowResponse = RetrieveRequest.GetResponse() as HttpWebResponse)
+                {
+                    var result = new StreamReader(SnowResponse.GetResponseStream()).ReadToEnd();
+
+                    JObject jResponse = JObject.Parse(result.ToString());
+                    JToken obObject = jResponse["result"];
+                    JEnumerable<JToken> ResolvedDeatils = (JEnumerable<JToken>)obObject.Values("close_notes");
+                    foreach (var DetailItem in ResolvedDeatils)
+                    {
+                        if (DetailItem != null)
+                            return ((JValue)DetailItem).Value.ToString();
+                    }
+                }
+            }
+            catch (Exception message)
+            {
+                Console.WriteLine(message.Message);
+                return message.Message;
+            }
+            return string.Empty;
+        }
+
         internal static string RetrieveIncidentWorkNotes(string Notesresponse)
         {
             try
