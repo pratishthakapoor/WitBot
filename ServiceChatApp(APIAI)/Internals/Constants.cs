@@ -17,5 +17,17 @@
         // Analytics KEY to authenticate the Text analytics API
 
         public const string TEXT_ANALYTICS_ID = "6b338c677a704354b740596015ad444a";
+
+        public static string ServiceNowUserName = "admin";
+        public static string ServiceNowPassword = "XyzoPw0NJ3qC";
+        public static string ServiceNowUrl = "https://dev56432.service-now.com/api/now/table/";
+        public static string ServiceNowJournalURL = "https://dev56432.service-now.com/api/now/table/sys_journal_field";
+        public static object ServiceNowSubCategory = "Incident";
+        public static object ServiceNowAssignmentGroup = "Service Desk";
+        public static object ServiceNowIncidentImpact = "2";
+        public static object ServiceNowIncidentPriority = "2";
+        public static object ServiceNowCallerId = "webservice";
+        public static object ServiceNowCatalogueName = "My bot application";
+        public static object ServiceNowComments = "Incident created"; 
     }
 }

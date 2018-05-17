@@ -13,13 +13,27 @@ namespace ServiceChatApp_APIAI_.Dialogs
         Phone
     }
 
+    public enum Category
+    {
+        Inquiry,
+        Software,
+        Hadware,
+        Newtwork,
+        Database,
+    }
+
     internal class TicketModel : IDialog<object>
     {
-        string description;
-        string database_desc;
-        string server_desc;
-        string middleware_desc;
-        string contactOption;
+        private string description;
+        private string short_description;
+        private string detail_description;
+        private string database_desc;
+        private string server_desc;
+        private string middleware_desc;
+        private string contactOption;
+        private string category_choice;
+        private string incidentTokenNumber;
+
         string retry_response = API_AI_Logger.API_Response("retry");
 
         public async Task StartAsync(IDialogContext context)
@@ -45,7 +59,7 @@ namespace ServiceChatApp_APIAI_.Dialogs
                     context,
                     resume: server_description,
                     prompt: "Please provide server details",
-                    retry: retry_response);
+                    retry: "retry_response}");
                 }
 
                 else if(key_phrases_extracted.Contains("database"))
@@ -69,13 +83,27 @@ namespace ServiceChatApp_APIAI_.Dialogs
             }
 
             PromptDialog.Choice(
+                context,
+                    options: (IEnumerable<ContactOptions>)Enum.GetValues(typeof(ContactOptions)),
+                    resume: categoryChoice,
+                    prompt: "Please chosse a category",
+                    retry: retry_response
+                );
+            
+        }
+
+        private async Task categoryChoice(IDialogContext context, IAwaitable<ContactOptions> result)
+        {
+            var category = await result;
+            category_choice = category.ToString();
+
+            PromptDialog.Choice(
                     context,
                     options: (IEnumerable<ContactOptions>)Enum.GetValues(typeof(ContactOptions)),
                     resume: contact_choice,
                     prompt: "How do we contact you?",
                     retry: retry_response
                     );
-
         }
 
         private async Task middleware_details(IDialogContext context, IAwaitable<string> result)
@@ -100,8 +128,50 @@ namespace ServiceChatApp_APIAI_.Dialogs
             /**
              * Set the details in the method create incident calling method of SnowClass
              **/
+            if (server_desc != null)
+            {
+                detail_description = description + server_desc;
+                short_description = description;
 
+                incidentTokenNumber = Logger.CreateServiceNow(detail_description, short_description, contactOption, category_choice);
 
+                await context.PostAsync("An incident ticket is being raised for you\n\n following is the raised token number " + incidentTokenNumber);
+                await context.PostAsync("Please take a note of this number as it is required for any future references");
+            }
+
+            else if(database_desc != null)
+            {
+                detail_description = description + database_desc;
+                short_description = description;
+
+                incidentTokenNumber = Logger.CreateServiceNow(detail_description, short_description, contactOption, category_choice);
+
+                await context.PostAsync("An incident ticket is being raised for you\n\n following is the raised token number " + incidentTokenNumber);
+                await context.PostAsync("Please take a note of this number as it is required for any future references");
+            }
+
+            else if(middleware_desc != null)
+            {
+                detail_description = description + middleware_desc;
+                short_description = description;
+
+                incidentTokenNumber = Logger.CreateServiceNow(detail_description, short_description, contactOption, category_choice);
+
+                await context.PostAsync("An incident ticket is being raised for you\n\n following is the raised token number " + incidentTokenNumber);
+                await context.PostAsync("Please take a note of this number as it is required for any future references");
+
+            }
+
+            else
+            {
+                detail_description = description;
+                short_description = description;
+
+                incidentTokenNumber = Logger.CreateServiceNow(detail_description, short_description, contactOption, category_choice);
+
+                await context.PostAsync("An incident ticket is being raised for you\n\n following is the raised token number " + incidentTokenNumber);
+                await context.PostAsync("Please take a note of this number as it is required for any future references");
+            }
         }
     }
 }
