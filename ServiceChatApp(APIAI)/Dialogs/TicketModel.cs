@@ -200,6 +200,8 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
                 Attachment attachment = HeroCardDetails.GetReplyMessage(Noteresult, incidentTokenNumber, status);
             }
+
+            context.Done(this);
         }
     }
 }
