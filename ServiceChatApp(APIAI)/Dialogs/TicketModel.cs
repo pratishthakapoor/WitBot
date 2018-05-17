@@ -153,6 +153,8 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
                 await context.PostAsync("An incident ticket is being raised for you\n\n following is the raised token number " + incidentTokenNumber);
                 await context.PostAsync("Please take a note of this number as it is required for any future references");
+
+                ticketStatusDialog(incidentTokenNumber, context);
             }
 
             else if(database_desc != null)
@@ -164,6 +166,7 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
                 await context.PostAsync("An incident ticket is being raised for you\n\n following is the raised token number " + incidentTokenNumber);
                 await context.PostAsync("Please take a note of this number as it is required for any future references");
+                ticketStatusDialog(incidentTokenNumber, context);
             }
 
             else if(middleware_desc != null)
@@ -175,6 +178,7 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
                 await context.PostAsync("An incident ticket is being raised for you\n\n following is the raised token number " + incidentTokenNumber);
                 await context.PostAsync("Please take a note of this number as it is required for any future references");
+                ticketStatusDialog(incidentTokenNumber, context);
 
             }
 
@@ -187,11 +191,17 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
                 await context.PostAsync("An incident ticket is being raised for you\n\n following is the raised token number " + incidentTokenNumber);
                 await context.PostAsync("Please take a note of this number as it is required for any future references");
+                ticketStatusDialog(incidentTokenNumber, context);
             }
 
+            context.Done(this);
+        }
+
+        private void ticketStatusDialog(string incidentTokenNumber, IDialogContext context)
+        {
             string incidentStatusDetail = Logger.RetrieveIncidentServiceNow(incidentTokenNumber);
 
-            if(incidentStatusDetail == "1")
+            if (incidentStatusDetail == "1")
             {
                 var status = "Your ticket is created and is under review of your team.";
                 string Noteresult = Logger.RetrieveIncidentWorkNotes(incidentTokenNumber);
@@ -200,8 +210,6 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
                 Attachment attachment = HeroCardDetails.GetReplyMessage(Noteresult, incidentTokenNumber, status);
             }
-
-            context.Done(this);
         }
     }
 }
