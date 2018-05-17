@@ -112,9 +112,9 @@ namespace ServiceChatApp_APIAI_.Dialogs
             {
                 string username = Constants.ServiceNowUserName;
                 string password = Constants.ServiceNowPassword;
-                string URL = Constants.ServiceNowUrl + GetTablename() + "?" + "sysparam_query=incidentTokenNumber=" + incidentTokenNumber;
+                string URL = Constants.ServiceNowUrl + GetTablename() + "?" + "sysparm_query=number=" + incidentTokenNumber;
 
-                var auth = "Basic" + Convert.ToBase64String(Encoding.Default.GetBytes(username + ":" + password));
+                var auth = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes(username + ":" + password));
 
                 HttpWebRequest RetrieveRequest = WebRequest.Create(URL) as HttpWebRequest;
                 RetrieveRequest.Headers.Add("Authorization", auth);
