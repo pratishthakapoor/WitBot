@@ -103,7 +103,7 @@ namespace ServiceChatApp_APIAI_.Dialogs
                 );
         }
 
-        private async Task categoryChoice(IDialogContext context, IAwaitable<ContactOptions> result)
+        private async Task categoryChoice(IDialogContext context, IAwaitable<Category> result)
         {
             var category = await result;
             category_choice = category.ToString();
