@@ -12,6 +12,8 @@ namespace ServiceChatApp_APIAI_.Dialogs
     [Serializable]
     public class RootDialog : IDialog<object>
     {
+        string retry_response = API_AI_Logger.API_Response("retry");
+
         public Task StartAsync(IDialogContext context)
         {
             context.Wait(MessageReceivedAsync);
@@ -35,7 +37,12 @@ namespace ServiceChatApp_APIAI_.Dialogs
             await context.PostAsync(response);
             if(action_response.Contains("Raise Ticket-next"))
             {
-                
+                PromptDialog.Confirm(
+                    context,
+                    resume: ResponseOption,
+                    prompt: "Do you wish to check that out",
+                    retry: retry_response
+                    );
         
             }
 
@@ -55,6 +62,23 @@ namespace ServiceChatApp_APIAI_.Dialogs
             
 
             //context.Wait(MessageReceivedAsync);
+        }
+
+        private async Task ResponseOption(IDialogContext context, IAwaitable<bool> result)
+        {
+            var confirmation = await result;
+            PromptDialog.Text(
+                context,
+                resume: DisplayTicketStatus,
+                prompt:"Please provide the ticket number for which you want to check the status",
+                retry: retry_response);
+        }
+
+        private async Task DisplayTicketStatus(IDialogContext context, IAwaitable<string> result)
+        {
+            var incidentTokenNumber = await result;
+
+            string statusDetail = Logger.RetrieveIncidentServiceNow(incidentTokenNumber);
         }
 
         private async Task MenuOption(IDialogContext context, IAwaitable<string> result)
