@@ -96,7 +96,7 @@ namespace ServiceChatApp_APIAI_.Dialogs
         {
             PromptDialog.Choice(
                 context,
-                    options: (IEnumerable<ContactOptions>)Enum.GetValues(typeof(ContactOptions)),
+                    options: (IEnumerable<Category>)Enum.GetValues(typeof(Category)),
                     resume: categoryChoice,
                     prompt: "Please chosse a category",
                     retry: retry_response
@@ -139,6 +139,7 @@ namespace ServiceChatApp_APIAI_.Dialogs
         private async Task contact_choice(IDialogContext context, IAwaitable<ContactOptions> contact_result)
         {
             var contactResponse = await contact_result;
+            contactOption = contactResponse.ToString();
             /**
              * Set the details in the method create incident calling method of SnowClass
              **/
