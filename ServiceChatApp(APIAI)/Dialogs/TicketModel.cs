@@ -5,7 +5,7 @@ using Microsoft.Bot.Builder.Dialogs;
 
 namespace ServiceChatApp_APIAI_.Dialogs
 {
-    [Serializable]
+  
 
     public enum ContactOptions
     {
@@ -22,6 +22,7 @@ namespace ServiceChatApp_APIAI_.Dialogs
         Database,
     }
 
+    [Serializable]
     internal class TicketModel : IDialog<object>
     {
         private string description;
@@ -42,7 +43,7 @@ namespace ServiceChatApp_APIAI_.Dialogs
                 context,
                 resume: description_option,
                 prompt: "Please provide a detailed description of the problem are you facing",
-                retry: retry_response );
+                retry: "Some error occured" );
         }
 
         private async Task description_option(IDialogContext context, IAwaitable<string> Description)
@@ -50,19 +51,21 @@ namespace ServiceChatApp_APIAI_.Dialogs
             var res = await Description;
             description = res;
             var key_phrases_extracted = await KeyPhraseAnalytics.ExtractPhraseAsync(description);
-            if(key_phrases_extracted.Contains("server") || key_phrases_extracted.Contains("database"))
+            if (key_phrases_extracted.Contains("server") || key_phrases_extracted.Contains("database"))
             {
-                if(key_phrases_extracted.Contains("server"))
+                if (key_phrases_extracted.Contains("server"))
                 {
                     //Console.WriteLine(key_phrases_extracted);
                     PromptDialog.Text(
                     context,
                     resume: server_description,
                     prompt: "Please provide server details",
-                    retry: "retry_response}");
+                    retry: retry_response);
+
+
                 }
 
-                else if(key_phrases_extracted.Contains("database"))
+                else if (key_phrases_extracted.Contains("database"))
                 {
                     PromptDialog.Text(
                     context,
@@ -79,19 +82,21 @@ namespace ServiceChatApp_APIAI_.Dialogs
                     prompt: "Please provide middleware details if any used by you",
                     retry: retry_response);
                 }
-               
+
             }
 
-            PromptDialog.Choice(
+            else
+            {
+                PromptDialog.Choice(
                 context,
                     options: (IEnumerable<ContactOptions>)Enum.GetValues(typeof(ContactOptions)),
                     resume: categoryChoice,
                     prompt: "Please chosse a category",
                     retry: retry_response
                 );
+            }
             
         }
-
         private async Task categoryChoice(IDialogContext context, IAwaitable<ContactOptions> result)
         {
             var category = await result;
