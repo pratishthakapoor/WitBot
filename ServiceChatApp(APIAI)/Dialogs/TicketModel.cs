@@ -16,6 +16,9 @@ namespace ServiceChatApp_APIAI_.Dialogs
     internal class TicketModel : IDialog<object>
     {
         string description;
+        string database_desc;
+        string server_desc;
+        string middleware_desc;
         string contactOption;
         string retry_response = API_AI_Logger.API_Response("retry");
 
@@ -35,44 +38,70 @@ namespace ServiceChatApp_APIAI_.Dialogs
             var key_phrases_extracted = await KeyPhraseAnalytics.ExtractPhraseAsync(description);
             if(key_phrases_extracted.Contains("server") || key_phrases_extracted.Contains("database"))
             {
-                //Console.WriteLine(key_phrases_extracted);
-                PromptDialog.Text(
-                context,
-                resume: server_description,
-                prompt: "Please provide server details",
-                retry: retry_response);
+                if(key_phrases_extracted.Contains("server"))
+                {
+                    //Console.WriteLine(key_phrases_extracted);
+                    PromptDialog.Text(
+                    context,
+                    resume: server_description,
+                    prompt: "Please provide server details",
+                    retry: retry_response);
+                }
+
+                else if(key_phrases_extracted.Contains("database"))
+                {
+                    PromptDialog.Text(
+                    context,
+                    resume: database_details,
+                    prompt: "Please provide database details",
+                    retry: retry_response);
+                }
+
+                else
+                {
+                    PromptDialog.Text(
+                    context,
+                    resume: middleware_details,
+                    prompt: "Please provide middleware details if any used by you",
+                    retry: retry_response);
+                }
+               
             }
-            else
-            {
-                PromptDialog.Choice(
+
+            PromptDialog.Choice(
                     context,
                     options: (IEnumerable<ContactOptions>)Enum.GetValues(typeof(ContactOptions)),
                     resume: contact_choice,
                     prompt: "How do we contact you?",
                     retry: retry_response
                     );
-            }
-            
+
         }
 
-        private async Task contact_choice(IDialogContext context, IAwaitable<ContactOptions> contact_result)
+        private async Task middleware_details(IDialogContext context, IAwaitable<string> result)
         {
-            var contactResponse= await contact_result;
-           /**
-            * Set the details in the method create incident calling method of SnowClass
-            **/
+            middleware_desc = await result;
+        }
 
+        private async Task database_details(IDialogContext context, IAwaitable<string> result)
+        {
+
+            database_desc = await result;
         }
 
         private async Task server_description(IDialogContext context, IAwaitable<string> server_detail)
         {
-            var res = await server_detail;
-            if(res == "null")
-            {
-                await context.PostAsync("I have created a service ticket for the given details");
+            server_desc = await server_detail; 
+        }
 
-            }
-            
+        private async Task contact_choice(IDialogContext context, IAwaitable<ContactOptions> contact_result)
+        {
+            var contactResponse = await contact_result;
+            /**
+             * Set the details in the method create incident calling method of SnowClass
+             **/
+
+
         }
     }
 }
