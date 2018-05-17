@@ -35,7 +35,7 @@ namespace ServiceChatApp_APIAI_.Dialogs
             string action_response = API_AI_Logger.API_Connection_Action(activity.Text);
 
             await context.PostAsync(response);
-            if(action_response.Contains("Raise Ticket-next"))
+            if(action_response.Contains("RaiseTicket-next"))
             {
                 PromptDialog.Confirm(
                     context,
