@@ -8,6 +8,7 @@ using Microsoft.Bot.Connector;
 
 namespace ServiceChatApp_APIAI_.Dialogs
 {
+
     [Serializable]
     public class RootDialog : IDialog<object>
     {
@@ -29,14 +30,29 @@ namespace ServiceChatApp_APIAI_.Dialogs
             //await context.PostAsync($"You sent {activity.Text} which was {length} characters");
 
             string response = API_AI_Logger.API_Response(activity.Text);
+            string action_response = API_AI_Logger.API_Connection_Action(activity.Text);
 
             await context.PostAsync(response);
+            if(action_response.Contains("Raise Ticket-next"))
+            {
+                
+        
+            }
 
-            PromptDialog.Text(
+            if(action_response.Contains("Raise Ticket-repeat"))
+            {
+
+            }
+
+            else
+            {
+                PromptDialog.Text(
                 context,
                 resume: MenuOption,
                 prompt: "I can \n \n 1. Raise an incident ticket. \n \n 2. Check the status of previous raise ticket.",
                 retry: "Please try agin, as some problem occured");
+            }
+            
 
             //context.Wait(MessageReceivedAsync);
         }
