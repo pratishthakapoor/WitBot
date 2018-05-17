@@ -43,7 +43,7 @@ namespace ServiceChatApp_APIAI_.Dialogs
                 context,
                 resume: description_option,
                 prompt: "Please provide a detailed description of the problem are you facing",
-                retry: "Some error occured" );
+                retry: retry_response );
         }
 
         private async Task description_option(IDialogContext context, IAwaitable<string> Description)
