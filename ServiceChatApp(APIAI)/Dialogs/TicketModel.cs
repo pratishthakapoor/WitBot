@@ -54,7 +54,7 @@ namespace ServiceChatApp_APIAI_.Dialogs
             if (key_phrases_extracted.Contains("server") || key_phrases_extracted.Contains("database"))
             {
                 if (key_phrases_extracted.Contains("server"))
-                {
+                { 
                     //Console.WriteLine(key_phrases_extracted);
                     PromptDialog.Text(
                     context,
