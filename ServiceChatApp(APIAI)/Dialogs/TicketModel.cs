@@ -87,16 +87,22 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
             else
             {
-                PromptDialog.Choice(
+                CategoryDetails(context);
+            }
+            
+        }
+
+        private void CategoryDetails(IDialogContext context)
+        {
+            PromptDialog.Choice(
                 context,
                     options: (IEnumerable<ContactOptions>)Enum.GetValues(typeof(ContactOptions)),
                     resume: categoryChoice,
                     prompt: "Please chosse a category",
                     retry: retry_response
                 );
-            }
-            
         }
+
         private async Task categoryChoice(IDialogContext context, IAwaitable<ContactOptions> result)
         {
             var category = await result;
@@ -114,17 +120,20 @@ namespace ServiceChatApp_APIAI_.Dialogs
         private async Task middleware_details(IDialogContext context, IAwaitable<string> result)
         {
             middleware_desc = await result;
+            CategoryDetails(context);
         }
 
         private async Task database_details(IDialogContext context, IAwaitable<string> result)
         {
 
             database_desc = await result;
+            CategoryDetails(context);
         }
 
         private async Task server_description(IDialogContext context, IAwaitable<string> server_detail)
         {
-            server_desc = await server_detail; 
+            server_desc = await server_detail;
+            CategoryDetails(context);
         }
 
         private async Task contact_choice(IDialogContext context, IAwaitable<ContactOptions> contact_result)
