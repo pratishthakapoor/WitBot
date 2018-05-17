@@ -105,5 +105,116 @@ namespace ServiceChatApp_APIAI_.Dialogs
                 return message.Message;
             }
         }
+
+        internal static string RetrieveIncidentServiceNow(string incidentTokenNumber)
+        {
+            try
+            {
+                string username = Constants.ServiceNowUserName;
+                string password = Constants.ServiceNowPassword;
+                string URL = Constants.ServiceNowUrl + GetTablename() + "?" + "sysparam_query=incidentTokenNumber=" + incidentTokenNumber;
+
+                var auth = "Basic" + Convert.ToBase64String(Encoding.Default.GetBytes(username + ":" + password));
+
+                HttpWebRequest RetrieveRequest = WebRequest.Create(URL) as HttpWebRequest;
+                RetrieveRequest.Headers.Add("Authorization", auth);
+                RetrieveRequest.Method = "GET";
+
+                using (HttpWebResponse SnowResponse = RetrieveRequest.GetResponse() as HttpWebResponse)
+                {
+                    var result = new StreamReader(SnowResponse.GetResponseStream()).ReadToEnd();
+
+                    JObject jResponse = JObject.Parse(result.ToString());
+                    JToken obObject = jResponse["result"];
+                    JEnumerable<JToken> incidentStatus = (JEnumerable<JToken>)obObject.Values("state");
+                    foreach(var item in incidentStatus)
+                    {
+                        if (item != null)
+                            return ((JValue)item).Value.ToString();
+                    }
+
+                }
+            }
+            catch(Exception message)
+            {
+                return message.Message;
+            }
+            return string.Empty;
+        }
+
+        internal static string RetrieveIncidentWorkNotes(string Notesresponse)
+        {
+            try
+            {
+                string username = Constants.ServiceNowUserName;
+                string password = Constants.ServiceNowPassword;
+                string URL = Constants.ServiceNowUrl + GetTablename() + "?" + "sysparm_query=number=" + Notesresponse;
+
+                var auth = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes(username + ":" + password));
+
+                HttpWebRequest RetrieveRequest = WebRequest.Create(URL) as HttpWebRequest;
+                RetrieveRequest.Headers.Add("Authorization", auth);
+                RetrieveRequest.Method = "GET";
+
+                using (HttpWebResponse SnowResponse = RetrieveRequest.GetResponse() as HttpWebResponse)
+                {
+                    var result = new StreamReader(SnowResponse.GetResponseStream()).ReadToEnd();
+
+                    JObject jResponse = JObject.Parse(result.ToString());
+                    JToken obObject = jResponse["result"];
+                    JEnumerable<JToken> NotesDetails = (JEnumerable<JToken>)obObject.Values("sys_id");
+
+                    foreach (var DetailItem in NotesDetails)
+                    {
+                        if (DetailItem != null)
+                            return GetNotesDetailList(((JValue)DetailItem).Value.ToString());
+                    }
+
+                }
+            }
+            catch (Exception message)
+            {
+                Console.WriteLine(message.Message);
+                return message.Message;
+            }
+            return string.Empty;
+        }
+
+        private static string GetNotesDetailList(object notesDetails)
+        {
+            try
+            {
+                string username = Constants.ServiceNowUserName;
+                string password = Constants.ServiceNowPassword;
+                string URL = Constants.ServiceNowJournalURL + "?" + "sysparm_query=element_id=" + notesDetails;
+
+                var auth = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes(username + ":" + password));
+
+                HttpWebRequest RetrieveRequest = WebRequest.Create(URL) as HttpWebRequest;
+                RetrieveRequest.Headers.Add("Authorization", auth);
+                RetrieveRequest.Method = "GET";
+                using (HttpWebResponse SnowResponse = RetrieveRequest.GetResponse() as HttpWebResponse)
+                {
+                    var result = new StreamReader(SnowResponse.GetResponseStream()).ReadToEnd();
+
+                    JObject jResponse = JObject.Parse(result.ToString());
+                    JToken obObject = jResponse["result"];
+                    JEnumerable<JToken> ResolvedDeatils = (JEnumerable<JToken>)obObject.Values("value");
+                    foreach (var Item in ResolvedDeatils)
+                    {
+                        if (Item != null)
+                            return ((JValue)Item).Value.ToString();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+            return string.Empty;
+        }
+
     }
 }

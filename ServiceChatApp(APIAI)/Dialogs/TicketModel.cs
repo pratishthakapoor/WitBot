@@ -152,7 +152,6 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
                 await context.PostAsync("An incident ticket is being raised for you\n\n following is the raised token number " + incidentTokenNumber);
                 await context.PostAsync("Please take a note of this number as it is required for any future references");
-                context.Done(this);
             }
 
             else if(database_desc != null)
@@ -164,7 +163,6 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
                 await context.PostAsync("An incident ticket is being raised for you\n\n following is the raised token number " + incidentTokenNumber);
                 await context.PostAsync("Please take a note of this number as it is required for any future references");
-                context.Done(this);
             }
 
             else if(middleware_desc != null)
@@ -176,7 +174,6 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
                 await context.PostAsync("An incident ticket is being raised for you\n\n following is the raised token number " + incidentTokenNumber);
                 await context.PostAsync("Please take a note of this number as it is required for any future references");
-                context.Done(this);
 
             }
 
@@ -189,9 +186,15 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
                 await context.PostAsync("An incident ticket is being raised for you\n\n following is the raised token number " + incidentTokenNumber);
                 await context.PostAsync("Please take a note of this number as it is required for any future references");
-                context.Done(this);
             }
 
+            string incidentStatusDetail = Logger.RetrieveIncidentServiceNow(incidentTokenNumber);
+
+            if(incidentStatusDetail == "1")
+            {
+                var status = "Your ticket is created and is under review of your team.";
+                string Noteresult = 
+            }
         }
     }
 }
