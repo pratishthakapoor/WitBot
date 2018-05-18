@@ -38,19 +38,6 @@ namespace ServiceChatApp_APIAI_
                     .SingleInstance();
             });
 
-            this.RegisterBotModules();
-
-        }
-
-        private void RegisterBotModules()
-        {
-            Conversation.UpdateContainer(
-                builder =>
-                {
-                    builder.RegisterModule(new ReflectionSurrogateModule());
-                    builder.RegisterModule<GlobalMessageHandler>();
-                });
-
         }
     }
 }
