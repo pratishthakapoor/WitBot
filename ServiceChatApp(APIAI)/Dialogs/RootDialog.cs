@@ -38,8 +38,13 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
             if(action_response.Contains("RaiseTicket-next"))
             {
-                NextCall(context);
-                
+                //NextCall(context);
+                PromptDialog.Confirm(
+                   context,
+                   resume: ResponseOption,
+                   prompt: "Do you wish to check that out",
+                   retry: retry_response
+                   );
             }
 
             else if(action_response.Contains("RaiseTicket-repeat"))
