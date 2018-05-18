@@ -161,6 +161,7 @@
     <Compile Include="APIAILogger\API_AI_Logger.cs" />
     <Compile Include="CardResponses\HeroCardDetails.cs" />
     <Compile Include="Dialogs\Logger.cs" />
+    <Compile Include="Dialogs\ScorableDialog\ChatResetScorable.cs" />
     <Compile Include="KeyPhraseExtraction\Document.cs" />
     <Compile Include="KeyPhraseExtraction\Exception\DocumentCollectionMaxDocumentException.cs" />
     <Compile Include="KeyPhraseExtraction\Exception\DocumentCollectionMaxSizeException.cs" />
