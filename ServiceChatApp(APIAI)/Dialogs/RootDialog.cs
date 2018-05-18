@@ -38,16 +38,11 @@ namespace ServiceChatApp_APIAI_.Dialogs
 
             if(action_response.Contains("RaiseTicket-next"))
             {
-                PromptDialog.Confirm(
-                    context,
-                    resume: ResponseOption,
-                    prompt: "Do you wish to check that out",
-                    retry: retry_response
-                    );
-        
+                NextCall(context);
+                
             }
 
-            if(action_response.Contains("RaiseTicket-repeat"))
+            else if(action_response.Contains("RaiseTicket-repeat"))
             {
 
             }
@@ -63,6 +58,16 @@ namespace ServiceChatApp_APIAI_.Dialogs
             
 
             //context.Wait(MessageReceivedAsync);
+        }
+
+        private void NextCall(IDialogContext context)
+        {
+            PromptDialog.Confirm(
+                    context,
+                    resume: ResponseOption,
+                    prompt: "Do you wish to check that out",
+                    retry: retry_response
+                    );
         }
 
         private async Task ResponseOption(IDialogContext context, IAwaitable<bool> result)
