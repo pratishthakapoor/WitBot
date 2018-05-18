@@ -1,4 +1,5 @@
-﻿using Microsoft.Bot.Builder.Dialogs.Internals;
+﻿using Microsoft.Bot.Builder.Dialogs;
+using Microsoft.Bot.Builder.Dialogs.Internals;
 using Microsoft.Bot.Builder.Internals.Fibers;
 using Microsoft.Bot.Builder.Scorables.Internals;
 using Microsoft.Bot.Connector;
@@ -35,9 +36,25 @@ namespace ServiceChatApp_APIAI_.Dialogs.ScorableDialog
             return state != null;
         }
 
-        protected override Task PostAsync(IActivity item, string state, CancellationToken token)
+        protected override async Task PostAsync(IActivity item, string state, CancellationToken token)
         {
-            
+            //this.task.Reset();
+            var message = item as IMessageActivity;
+
+            if (message != null)
+            {
+
+                var root = new RootDialog();
+
+                //var ticketForm = new RaiseDialog();
+
+                var interruption = root.Void<object, IMessageActivity>();
+
+                task.Call(interruption, null);
+
+                await task.PollAsync(token);
+            }
+
         }
 
         protected override async Task<string> PrepareAsync(IActivity item, CancellationToken token)
