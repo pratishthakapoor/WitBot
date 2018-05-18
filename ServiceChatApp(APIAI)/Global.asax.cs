@@ -5,6 +5,9 @@ using Microsoft.Bot.Builder.Dialogs.Internals;
 using Autofac;
 using Microsoft.Bot.Connector;
 using System.Reflection;
+using System;
+using Microsoft.Bot.Builder.Internals.Fibers;
+using ServiceChatApp_APIAI_.Model;
 
 namespace ServiceChatApp_APIAI_
 {
@@ -34,6 +37,20 @@ namespace ServiceChatApp_APIAI_
                     .AsSelf()
                     .SingleInstance();
             });
+
+            this.RegisterBotModules();
+
+        }
+
+        private void RegisterBotModules()
+        {
+            Conversation.UpdateContainer(
+                builder =>
+                {
+                    builder.RegisterModule(new ReflectionSurrogateModule());
+                    builder.RegisterModule<GlobalMessageHandler>();
+                });
+
         }
     }
 }
