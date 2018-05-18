@@ -53,6 +53,8 @@ namespace ServiceChatApp_APIAI_.Dialogs.ScorableDialog
                 task.Call(interruption, null);
 
                 await task.PollAsync(token);
+
+                this.task.Reset();
             }
 
         }
